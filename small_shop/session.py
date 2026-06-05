@@ -1,13 +1,13 @@
 from sqlalchemy.orm import sessionmaker
-from connection import engine  # Import from connection.py
+from model import engine
 
-# Create session factory
-SessionLocal = sessionmaker(bind=engine)
-
-# Session function
 def get_db():
-    db = SessionLocal()
+
+    SessionLocal = sessionmaker(bind=engine) 
+    
+    db = SessionLocal()  # Create session (not Sessionmaker)
     try:
-        yield db
-    finally:
-        db.close()
+        yield db          # Give session to endpoint 
+    finally:              # finally
+        db.close()        # Close session when done
+

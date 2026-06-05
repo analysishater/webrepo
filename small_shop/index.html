@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lovable Shop</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { min-height: 100vh; }
+
+    .bg {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #e8e6f8 0%, #f5f0fb 40%, #fce8f0 100%);
+      display: flex; flex-direction: column;
+    }
+    .center { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+    .card {
+      background: white; border-radius: 18px; padding: 2rem 2.5rem;
+      width: 100%; max-width: 480px;
+      box-shadow: 0 4px 32px rgba(120,100,200,0.08);
+    }
+    .avatar {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, #a78be8, #7b6fd4);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 600; font-size: 17px; color: white; margin: 0 auto 1rem;
+    }
+    .card-title { color: #6b46c1; font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 6px; }
+    .card-sub { color: #888; font-size: 14px; text-align: center; margin-bottom: 1.5rem; }
+
+    label { display: block; color: #7c5cbf; font-size: 14px; font-weight: 500; margin-bottom: 6px; margin-top: 1rem; }
+    input[type=text], input[type=password], input[type=number] {
+      width: 100%; padding: 10px 14px; border: 1.5px solid #e2daf5;
+      border-radius: 10px; font-size: 15px; outline: none; color: #333;
+      transition: border 0.2s;
+    }
+    input:focus { border-color: #9b7de0; }
+
+    .btn-primary {
+      width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 16px;
+      font-weight: 600; color: white; cursor: pointer; margin-top: 1.5rem;
+      background: linear-gradient(90deg, #7b5ea7, #5b9bd5);
+    }
+    .btn-primary:hover { opacity: 0.92; }
+    .btn-outline {
+      padding: 12px 24px; border: 1.5px solid #ccc; border-radius: 10px;
+      font-size: 15px; background: white; cursor: pointer; color: #333; font-weight: 500;
+    }
+    .btn-outline:hover { background: #f5f5f5; }
+    .btn-signup {
+      width: 100%; padding: 12px; border: 1.5px solid #e580a8; border-radius: 10px;
+      font-size: 16px; font-weight: 600; color: #e580a8; background: white;
+      cursor: pointer; margin-top: 0.75rem;
+    }
+    .btn-signup:hover { background: #fff0f5; }
+    .btn-create {
+      flex: 1; padding: 12px; border: none; border-radius: 10px; font-size: 15px;
+      font-weight: 600; color: white; cursor: pointer;
+      background: linear-gradient(90deg, #a78be8, #e580a8);
+    }
+    .btn-create:hover { opacity: 0.9; }
+    .row-btns { display: flex; gap: 10px; margin-top: 1.5rem; }
+
+    .error { color: #e53e3e; font-size: 13px; margin-top: 8px; text-align: center; }
+    .success { color: #38a169; font-size: 13px; margin-top: 8px; text-align: center; }
+
+    /* Navbar */
+    .navbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 32px; background: white;
+      border-bottom: 1px solid #f0eaf8;
+    }
+    .navbar-brand { color: #6b46c1; font-size: 20px; font-weight: 700; }
+    .navbar-right { display: flex; align-items: center; gap: 16px; }
+    .navbar-user { text-align: right; }
+    .navbar-name { font-weight: 600; color: #333; font-size: 15px; }
+    .navbar-age { color: #999; font-size: 13px; }
+    .btn-signout {
+      padding: 7px 18px; border: 1.5px solid #e580a8; border-radius: 20px;
+      color: #e580a8; background: white; font-size: 14px; cursor: pointer; font-weight: 500;
+    }
+    .btn-signout:hover { background: #fff0f5; }
+
+    /* Dashboard */
+    .dashboard-body {
+      flex: 1; background: linear-gradient(135deg, #e8e6f8 0%, #f5f0fb 40%, #fce8f0 100%);
+      padding: 2rem;
+    }
+    .welcome-card {
+      background: white; border-radius: 16px; padding: 2rem 2.5rem;
+      max-width: 860px; margin: 0 auto;
+    }
+    .welcome-title { color: #6b46c1; font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .welcome-sub { color: #666; font-size: 15px; margin-bottom: 1.5rem; }
+    .btn-show {
+      padding: 12px 28px; border: none; border-radius: 10px; font-size: 15px;
+      font-weight: 600; color: white; cursor: pointer;
+      background: linear-gradient(90deg, #7b5ea7, #5b9bd5);
+    }
+    .btn-show:hover { opacity: 0.9; }
+
+    /* Products */
+    .products-body {
+      flex: 1; background: linear-gradient(135deg, #e8e6f8 0%, #f5f0fb 40%, #fce8f0 100%);
+      padding: 2rem;
+    }
+    .products-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.5rem; max-width: 860px; margin-left: auto; margin-right: auto;
+    }
+    .products-title { color: #6b46c1; font-size: 24px; font-weight: 700; }
+    .products-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+      max-width: 860px; margin: 0 auto;
+    }
+    .product-card {
+      background: white; border-radius: 14px; padding: 1.5rem;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .product-name { color: #6b46c1; font-size: 17px; font-weight: 600; }
+    .product-bottom { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 8px; }
+    .product-stock { color: #999; font-size: 13px; }
+    .btn-select {
+      padding: 9px 22px; border: none; border-radius: 20px; font-size: 14px;
+      font-weight: 600; color: white; cursor: pointer;
+      background: linear-gradient(90deg, #a78be8, #e580a8);
+    }
+    .btn-select:hover { opacity: 0.9; }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(40,30,60,0.55); display: flex;
+      align-items: center; justify-content: center; z-index: 100;
+    }
+    .modal {
+      background: white; border-radius: 16px; padding: 2rem 2.5rem;
+      width: 100%; max-width: 420px; position: relative;
+    }
+    .modal-title { color: #6b46c1; font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .modal-sub { color: #666; font-size: 14px; margin-bottom: 1rem; }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px; background: none; border: none;
+      font-size: 20px; color: #999; cursor: pointer;
+    }
+    .modal-close:hover { color: #333; }
+    .loading { color: #888; font-size: 14px; text-align: center; padding: 1rem; }
+
+    /* Pages */
+    .page { display: none; flex-direction: column; min-height: 100vh; }
+    .page.active { display: flex; }
+  </style>
+</head>
+<body>
+
+<!-- PAGE: Landing -->
+<div id="page-landing" class="page active bg">
+  <div class="center">
+    <div class="card">
+      <div class="avatar">LS</div>
+      <div class="card-title">Welcome to Lovable Shop</div>
+      <div class="card-sub">Sign in to continue or create a new account.</div>
+      <button class="btn-primary" onclick="show('page-signin')">Sign in</button>
+      <button class="btn-signup" onclick="show('page-signup')">Sign up</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: Sign In -->
+<div id="page-signin" class="page bg">
+  <div class="center">
+    <div class="card">
+      <div class="avatar">LS</div>
+      <div class="card-title">Welcome to Lovable Shop</div>
+      <div class="card-sub">Sign in to your account.</div>
+      <label>Name</label>
+      <input type="text" id="signin-name">
+      <label>Password</label>
+      <input type="password" id="signin-pass">
+      <div id="signin-msg" style="min-height:18px"></div>
+      <div class="row-btns">
+        <button class="btn-outline" onclick="show('page-landing')">Return</button>
+        <button class="btn-create" onclick="doSignin()">Sign in</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: Sign Up -->
+<div id="page-signup" class="page bg">
+  <div class="center">
+    <div class="card">
+      <div class="avatar">LS</div>
+      <div class="card-title">Welcome to Lovable Shop</div>
+      <div class="card-sub">Create your account.</div>
+      <label>Name</label>
+      <input type="text" id="signup-name">
+      <label>Age</label>
+      <input type="number" id="signup-age" min="1">
+      <label>Password</label>
+      <input type="password" id="signup-pass">
+      <div id="signup-msg" style="min-height:18px"></div>
+      <div class="row-btns">
+        <button class="btn-outline" onclick="show('page-landing')">Return</button>
+        <button class="btn-create" onclick="doSignup()">Create account</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: Dashboard -->
+<div id="page-dashboard" class="page">
+  <div class="navbar">
+    <span class="navbar-brand">Lovable Shop</span>
+    <div class="navbar-right">
+      <div class="navbar-user">
+        <div class="navbar-name" id="dash-name"></div>
+        <div class="navbar-age" id="dash-age"></div>
+      </div>
+      <button class="btn-signout" onclick="doSignout()">Sign out</button>
+    </div>
+  </div>
+  <div class="dashboard-body">
+    <div class="welcome-card">
+      <div class="welcome-title" id="dash-welcome"></div>
+      <div class="welcome-sub">Click the button below to browse the products available in stock.</div>
+      <button class="btn-show" onclick="showProducts()">Show products</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: Products -->
+<div id="page-products" class="page">
+  <div class="navbar">
+    <span class="navbar-brand">Lovable Shop</span>
+    <div class="navbar-right">
+      <div class="navbar-user">
+        <div class="navbar-name" id="prod-name"></div>
+        <div class="navbar-age" id="prod-age"></div>
+      </div>
+      <button class="btn-signout" onclick="doSignout()">Sign out</button>
+    </div>
+  </div>
+  <div class="products-body">
+    <div class="products-header">
+      <div class="products-title">Products in stock</div>
+      <button class="btn-outline" onclick="show('page-dashboard')">Return</button>
+    </div>
+    <div class="products-grid" id="products-grid">
+      <div class="loading">Loading products...</div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Buy -->
+<div id="modal-buy" class="modal-overlay" style="display:none">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">&#x2715;</button>
+    <div class="modal-title" id="modal-title">Buy Product</div>
+    <div class="modal-sub">Enter the quantity you want, then press Confirm.</div>
+    <label id="modal-qty-label">Quantity</label>
+    <input type="number" id="modal-qty" min="1">
+    <div id="modal-msg" style="min-height:18px; margin-top:8px;"></div>
+    <div class="row-btns" style="margin-top:1.2rem">
+      <button class="btn-outline" onclick="closeModal()">Return</button>
+      <button class="btn-create" onclick="doBuy()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API = 'http://localhost:8000';
+  let currentUser = null;
+  let selectedProduct = null;
+
+  function show(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+  }
+
+  function setMsg(id, msg, isError) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.className = isError ? 'error' : 'success';
+  }
+
+  async function doSignin() {
+    const name = document.getElementById('signin-name').value.trim();
+    const pass = document.getElementById('signin-pass').value;
+    if (!name || !pass) { setMsg('signin-msg', 'Please fill all fields.', true); return; }
+    setMsg('signin-msg', 'Signing in...', false);
+    try {
+      const res = await fetch(`${API}/signin?name=${encodeURIComponent(name)}&password=${encodeURIComponent(pass)}`);
+      const data = await res.json();
+      if (!res.ok) { setMsg('signin-msg', data.detail || 'Error', true); return; }
+      await loadDashboard(name);
+    } catch(e) { setMsg('signin-msg', 'Cannot reach server.', true); }
+  }
+
+  async function doSignup() {
+    const name = document.getElementById('signup-name').value.trim();
+    const age = document.getElementById('signup-age').value;
+    const pass = document.getElementById('signup-pass').value;
+    if (!name || !age || !pass) { setMsg('signup-msg', 'Please fill all fields.', true); return; }
+    setMsg('signup-msg', 'Creating account...', false);
+    try {
+      const res = await fetch(`${API}/signup?name=${encodeURIComponent(name)}&age=${age}&password=${encodeURIComponent(pass)}`, { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) { setMsg('signup-msg', data.detail || 'Error', true); return; }
+      setMsg('signup-msg', 'Account created! Signing you in...', false);
+      await loadDashboard(name);
+    } catch(e) { setMsg('signup-msg', 'Cannot reach server.', true); }
+  }
+
+  async function loadDashboard(name) {
+    try {
+      const res = await fetch(`${API}/dashboard?name=${encodeURIComponent(name)}`);
+      const data = await res.json();
+      if (!res.ok) return;
+      currentUser = { name, age: data.age };
+      document.getElementById('dash-name').textContent = name;
+      document.getElementById('dash-age').textContent = 'Age ' + data.age;
+      document.getElementById('dash-welcome').textContent = 'Welcome, ' + name + '! 🎉';
+      document.getElementById('prod-name').textContent = name;
+      document.getElementById('prod-age').textContent = 'Age ' + data.age;
+      show('page-dashboard');
+    } catch(e) {}
+  }
+
+  async function showProducts() {
+    show('page-products');
+    document.getElementById('products-grid').innerHTML = '<div class="loading">Loading products...</div>';
+    try {
+      const res = await fetch(`${API}/displayproduct`);
+      const products = await res.json();
+      if (!products.length) {
+        document.getElementById('products-grid').innerHTML = '<div class="loading">No products available.</div>';
+        return;
+      }
+      document.getElementById('products-grid').innerHTML = products.map(p => `
+        <div class="product-card">
+          <div class="product-name">${p.name}</div>
+          <div class="product-bottom">
+            <div class="product-stock">In stock: ${p.quentity}</div>
+            <button class="btn-select" onclick="openBuy('${p.name}', ${p.quentity})">Select</button>
+          </div>
+        </div>
+      `).join('');
+    } catch(e) {
+      document.getElementById('products-grid').innerHTML = '<div class="loading">Cannot reach server.</div>';
+    }
+  }
+
+  function openBuy(name, qty) {
+    selectedProduct = { name, qty };
+    document.getElementById('modal-title').textContent = 'Buy ' + name;
+    document.getElementById('modal-qty-label').textContent = 'Quantity (available: ' + qty + ')';
+    document.getElementById('modal-qty').value = '';
+    document.getElementById('modal-qty').max = qty;
+    document.getElementById('modal-msg').textContent = '';
+    document.getElementById('modal-buy').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('modal-buy').style.display = 'none';
+    selectedProduct = null;
+  }
+
+  async function doBuy() {
+    const qt = parseInt(document.getElementById('modal-qty').value);
+    if (!qt || qt <= 0) { setMsg('modal-msg', 'Enter a valid quantity.', true); return; }
+    if (qt > selectedProduct.qty) { setMsg('modal-msg', 'Not enough stock.', true); return; }
+    setMsg('modal-msg', 'Processing...', false);
+    try {
+      const res = await fetch(`${API}/buyproduct?name=${encodeURIComponent(selectedProduct.name)}&qt=${qt}`, { method: 'PUT' });
+      const data = await res.json();
+      if (!res.ok) { setMsg('modal-msg', data.detail || 'Error', true); return; }
+      setMsg('modal-msg', 'Purchase successful!', false);
+      setTimeout(() => { closeModal(); showProducts(); }, 1200);
+    } catch(e) { setMsg('modal-msg', 'Cannot reach server.', true); }
+  }
+
+  function doSignout() {
+    currentUser = null;
+    document.getElementById('signin-name').value = '';
+    document.getElementById('signin-pass').value = '';
+    show('page-landing');
+  }
+</script>
+</body>
+</html>

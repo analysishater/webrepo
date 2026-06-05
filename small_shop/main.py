@@ -4,8 +4,25 @@ from session import get_db
 from model import User, Product
 import bcrypt
 from sqlalchemy import text
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
 
 app = FastAPI()
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/")
+def serve_frontend():
+    return FileResponse("index.html")
+
 
 # Helper functions
 def hash_password(password: str) -> str:
@@ -18,6 +35,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
         plain_password.encode('utf-8'),
         hashed_password.encode('utf-8')
     )
+
 
 
 
@@ -47,6 +65,7 @@ def sign_up(
     db.commit()
 
     return {"message": "USER ADDED SUCCESSFULLY !"}
+
 
 
 
@@ -112,6 +131,7 @@ def buy_product(name: str, qt: int, db: Session = Depends(get_db)):
     if qt <= 0:
         raise HTTPException(status_code=400, detail="ENTER A VALID QUANTITY")
     
+   
    
     qtt = db.execute(
         text("SELECT quentity FROM product WHERE name = :name"),

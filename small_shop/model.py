@@ -10,7 +10,7 @@ class User(Base):
     id_client = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(45), nullable=False)
     age = Column(Integer, nullable=False)
-    mot_de_pass = Column(String(45), nullable=False)
+    motdepass = Column(String(255), nullable=False)
 
 class Product(Base):
     __tablename__ = "product"
